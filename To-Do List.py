@@ -1,54 +1,43 @@
-# To-Do List App
-# By Raje
+tasks = []
 
-FILE = "todo.txt"
-
-def add_task():
-    task = input("Enter task: ")
-    with open(FILE, "a") as f:
-        f.write(task + "\n")
-    print("✅ Task added!\n")
-
-def view_tasks():
+def load_tasks():
     try:
-        with open(FILE, "r") as f:
-            tasks = f.readlines()
-        if not tasks:
-            print("⚠️ No tasks found.\n")
-            return
-        print("\n--- To-Do List ---")
-        for i, t in enumerate(tasks, 1):
-            print(f"{i}. {t.strip()}")
-        print()
-    except FileNotFoundError:
-        print("⚠️ No tasks found.\n")
+        with open("tasks.txt","r") as f:
+            for line in f:
+                tasks.append(line.strip())
+    except:
+        pass
 
-def delete_task():
-    view_tasks()
-    num = int(input("Enter task number to delete: "))
-    with open(FILE, "r") as f:
-        tasks = f.readlines()
-    if 0 < num <= len(tasks):
-        tasks.pop(num-1)
-        with open(FILE, "w") as f:
-            f.writelines(tasks)
-        print("✅ Task deleted!\n")
-    else:
-        print("❌ Invalid task number!\n")
+def save_tasks():
+    with open("tasks.txt","w") as f:
+        for task in tasks:
+            f.write(task+"\n")
+
+def show_tasks():
+    print("\nYour Tasks:")
+    for i, t in enumerate(tasks):
+        print(f"{i+1}. {t}")
 
 def main():
+    load_tasks()
     while True:
-        print("===== To-Do List =====")
-        print("1. Add Task")
-        print("2. View Tasks")
-        print("3. Delete Task")
-        print("4. Exit")
-        ch = input("Enter choice: ")
-        if ch == "1": add_task()
-        elif ch == "2": view_tasks()
-        elif ch == "3": delete_task()
-        elif ch == "4": break
-        else: print("⚠️ Invalid choice!\n")
+        print("\n1.Add 2.Delete 3.View 4.Exit")
+        choice = input("Choice: ")
+        if choice=="1":
+            t=input("Enter task: ")
+            tasks.append(t)
+        elif choice=="2":
+            show_tasks()
+            index=int(input("Task number to delete: "))
+            if 0<index<=len(tasks):
+                tasks.pop(index-1)
+        elif choice=="3":
+            show_tasks()
+        elif choice=="4":
+            save_tasks()
+            break
+        else:
+            print("Invalid choice!")
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
